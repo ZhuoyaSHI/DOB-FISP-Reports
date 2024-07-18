@@ -14,8 +14,8 @@ This project implements a Scrapy spider to crawl and extract Facade Inspection &
 
 ## Installation
 1. Clone the repository
-2. Install the required packages: pip install -r requirements.txt
-3. Ensure Redis is installed and running on your system. Fill in the REDIS_URL in settings.py
+2. Install the required packages: `pip install -r requirements.txt`
+3. Ensure Redis is installed and running on your system. Fill in the REDIS_URL in `settings.py`
 
 ## Usage
 1. Start the Redis server.
@@ -28,7 +28,7 @@ The spider yields `DobnycItem` objects containing:
 - Cycle information
 - Photo URLs and counts
 
-Reports will be saved in 'Data' Folder:
+Reports will be saved in `Data` Folder:
 - Detailed Photos: Facade detailed photo files under cycle 8 and 9 in sub-folder `8` and `9`
 - FISP: FISP report in txt format under cycle 8 and 9 in sub-folder `8` and `9`
 - FISP_json: FISP report in json format under cycle 8 and 9 in sub-folder `8` and `9`
