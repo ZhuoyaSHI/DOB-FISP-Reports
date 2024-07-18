@@ -40,6 +40,6 @@ Reports will be saved in `Data` Folder:
 - Failed requests are logged in `failedBIN.txt`
 - Rerun the code with a different Redis database and `failedBIN.txt`:
   - Change the Redis database REDIS_DB in settings.py
-  - In spider crawlFISP.py, replace BINs = pd.read_csv(r'BINs.csv')['BIN'].tolist() with failedBIN.txt
+  - In spider crawlFISP.py, replace `BINs = pd.read_csv(r'BINs.csv')['BIN'].tolist()` with failedBIN.txt
 
 
