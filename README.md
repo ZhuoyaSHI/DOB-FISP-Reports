@@ -29,9 +29,9 @@ The spider yields `DobnycItem` objects containing:
 - Photo URLs and counts
 
 Reports will be saved in 'Data' Folder:
-- Detailed Photos: Facade detailed photo files under cycle 8 and 9 in sub-folder '8' and '9'
-- FISP: FISP report in txt format under cycle 8 and 9 in sub-folder '8' and '9'
-- FISP_json: FISP report in json format under cycle 8 and 9 in sub-folder '8' and '9'
+- Detailed Photos: Facade detailed photo files under cycle 8 and 9 in sub-folder `8` and `9`
+- FISP: FISP report in txt format under cycle 8 and 9 in sub-folder `8` and `9`
+- FISP_json: FISP report in json format under cycle 8 and 9 in sub-folder `8` and `9`
 - Invalid:
   - invalid_bin.csv: DOB has no data for these BINs
   - no_8_9_cycle.csv: There is no data for cycle8/9 for these BINs
