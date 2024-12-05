@@ -9,8 +9,9 @@ This project implements a Scrapy spider to crawl and extract Facade Inspection &
 - Records missing data and errors during the run
 
 ## Notes.
-- Proxy rotation is not implemented due to budget. The website would ban your IP after few scrapings especially when running the code during daytime. Highly recommend run it after 7pm and before 5am.
-- If your IP is banned, stop the running and change your IP to continue running.
+- Proxy rotation is not implemented due to budget. The website would ban your IP after few scrapings especially when running the code during daytime. Highly recommend run it after 7pm and before 5am. If your IP is banned, stop the running and change your IP to continue running.
+- BIN.csv contains all the BINs that are interested.
+- settings.py: Scrapy settings.
   
 ## Requirements
 - Python 3.11
