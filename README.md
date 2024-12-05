@@ -1,13 +1,17 @@
 # NYC FISP Crawler
 
 ## Description
-This project implements a Scrapy spider to crawl and extract Facade Inspection & Safety Program (FISP) data in cycle 8 and 9 from the New York City Department of Buildings website. It utilizes Redis for distributed crawling.
+This project implements a Scrapy spider to crawl and extract Facade Inspection & Safety Program (FISP) data in cycle 8 and 9 from the New York City Department of Buildings website (https://a810-dobnow.nyc.gov/publish/Index.html#!/). It utilizes Redis for distributed crawling.
 
 ## Features
 - Extracts FISP reports and related facade photograph reports for specified Building Identification Numbers (BINs)
 - Uses Redis for distributed crawling
 - Records missing data and errors during the run
 
+## Notes.
+- Proxy rotation is not implemented due to budget. The website would ban your IP after few scrapings especially when running the code during daytime. Highly recommend run it after 7pm and before 5am.
+- If your IP is banned, stop the running and change your IP to continue running.
+  
 ## Requirements
 - Python 3.11
 - See requirements.txt
