@@ -12,4 +12,4 @@ class DobnycItem(scrapy.Item):
    fileurl = scrapy.Field()
    FISP = scrapy.Field()
    FISP_json = scrapy.Field()
-   photo_count = scrapy.Field()
+   # photo_count = scrapy.Field()

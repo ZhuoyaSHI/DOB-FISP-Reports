@@ -218,26 +218,26 @@ class CrawlfispSpider(RedisSpider):
         items['photo_count'] = "No Photo"
         yield items
 
-    def parse_photos(self, response):
-        """
-        Parse the photo download response and yield the final item.
+    # def parse_photos(self, response):
+    #     """
+    #     Parse the photo download response and yield the final item.
 
-        Args:
-            response (scrapy.http.Response): The response object.
+    #     Args:
+    #         response (scrapy.http.Response): The response object.
 
-        Yields:
-            DobnycItem: The final scraped item with all collected data.
-        """
-        items = response.meta["items"]
-        if json.loads(response.text)["IsSuccess"]:
-            fileurl = json.loads(response.text)["downloadPath"]
-            items['fileurl'] = fileurl
-            items['photo_count'] = response.meta["photo_count"]
-            yield items
-        else:
-            bin_id = response.meta["items"]["BIN"]
-            with open("failedBIN.txt", "a") as f:
-                f.write(f"{bin_id}\n")
+    #     Yields:
+    #         DobnycItem: The final scraped item with all collected data.
+    #     """
+    #     items = response.meta["items"]
+    #     if json.loads(response.text)["IsSuccess"]:
+    #         fileurl = json.loads(response.text)["downloadPath"]
+    #         items['fileurl'] = fileurl
+    #         items['photo_count'] = response.meta["photo_count"]
+    #         yield items
+    #     else:
+    #         bin_id = response.meta["items"]["BIN"]
+    #         with open("failedBIN.txt", "a") as f:
+    #             f.write(f"{bin_id}\n")
 
     def process_unfinished_items(self):
         """

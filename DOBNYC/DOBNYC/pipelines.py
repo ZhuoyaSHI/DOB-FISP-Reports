@@ -104,8 +104,8 @@ class DobnycPipeline(object):
             os.path.join('Data', 'FISP_json', '8'),
             os.path.join('Data', 'FISP_json', '9'),
             os.path.join('Data', 'Invalid'),
-            os.path.join('Data', 'Detailed Photos', '8'),
-            os.path.join('Data', 'Detailed Photos', '9')
+            # os.path.join('Data', 'Detailed Photos', '8'),
+            # os.path.join('Data', 'Detailed Photos', '9')
         ]
 
         # Create each directory
@@ -179,119 +179,121 @@ class DobnycPipeline(object):
             self.write_to_csv(self.invalid_bin_file, {'BIN': BIN})
         return item
 
+'''.git/
+The following class is for scraping photo attachements for submitted reports.
+'''
+# class PhotosPipeline(FilesPipeline):
+#     """
+#     This pipeline class extends Scrapy's FilesPipeline to handle downloading and storing photos with additional features.
 
-class PhotosPipeline(FilesPipeline):
-    """
-    This pipeline class extends Scrapy's FilesPipeline to handle downloading and storing photos with additional features.
+#     It integrates Redis for tracking download statuses and implements custom file naming conventions.
 
-    It integrates Redis for tracking download statuses and implements custom file naming conventions.
+#     Methods:
+#         from_settings(cls, settings): Class method to initialize the pipeline from Scrapy settings.
+#         __init__(self, store_uri, download_func=None, settings=None): Initializes the pipeline with required attributes.
+#         get_media_requests(self, item, info): Generates download requests for photos based on validity criteria.
+#         file_path(self, request, response=None, info=None, *, item=None): Generates filenames for downloaded photos.
+#         file_downloaded(self, response, request, info, *, item=None): Handles post-download actions and updates Redis.
+#     """
+#     @classmethod
+#     def from_settings(cls, settings):
+#         """
+#         Inherits from FilesPipeline's class method for initialization from settings.
 
-    Methods:
-        from_settings(cls, settings): Class method to initialize the pipeline from Scrapy settings.
-        __init__(self, store_uri, download_func=None, settings=None): Initializes the pipeline with required attributes.
-        get_media_requests(self, item, info): Generates download requests for photos based on validity criteria.
-        file_path(self, request, response=None, info=None, *, item=None): Generates filenames for downloaded photos.
-        file_downloaded(self, response, request, info, *, item=None): Handles post-download actions and updates Redis.
-    """
-    @classmethod
-    def from_settings(cls, settings):
-        """
-        Inherits from FilesPipeline's class method for initialization from settings.
+#         Args:
+#             settings (scrapy.Settings): Scrapy settings object.
 
-        Args:
-            settings (scrapy.Settings): Scrapy settings object.
-
-        Returns:
-            PhotosPipeline: An instance of the PhotosPipeline class.
-        """
-        pipeline = super().from_settings(settings)
-        pipeline.redis_conn = connection.from_settings(settings)
-        return pipeline
+#         Returns:
+#             PhotosPipeline: An instance of the PhotosPipeline class.
+#         """
+#         pipeline = super().from_settings(settings)
+#         pipeline.redis_conn = connection.from_settings(settings)
+#         return pipeline
     
-    def __init__(self, store_uri, download_func=None, settings=None):
-        """
-        Initializes the pipeline with required attributes.
+#     def __init__(self, store_uri, download_func=None, settings=None):
+#         """
+#         Initializes the pipeline with required attributes.
 
-        Args:
-            store_uri (str): The base URI for storing downloaded files. (Inherits from FilesPipeline)
-            download_func (func): Optional download function. (Inherits from FilesPipeline)
-            settings (scrapy.Settings): Scrapy settings object.
-        """
-        super().__init__(store_uri, download_func, settings)
-        self.redis_conn = None
-        self.files_urls_field = 'fileurl'
-        self.redis_conn = get_redis_from_settings(settings)
-        self.redis_key_prefix = 'photo'
+#         Args:
+#             store_uri (str): The base URI for storing downloaded files. (Inherits from FilesPipeline)
+#             download_func (func): Optional download function. (Inherits from FilesPipeline)
+#             settings (scrapy.Settings): Scrapy settings object.
+#         """
+#         super().__init__(store_uri, download_func, settings)
+#         self.redis_conn = None
+#         self.files_urls_field = 'fileurl'
+#         self.redis_conn = get_redis_from_settings(settings)
+#         self.redis_key_prefix = 'photo'
         
-    def get_media_requests(self, item, info):
-        """
-        Generates download requests for photos based on validity criteria and handles retries for failed downloads.
+#     def get_media_requests(self, item, info):
+#         """
+#         Generates download requests for photos based on validity criteria and handles retries for failed downloads.
 
-        Args:
-            item (scrapy.Item): The scraped item containing data.
-            info (scrapy.ItemInformation): Contextual information about the scraping process.
+#         Args:
+#             item (scrapy.Item): The scraped item containing data.
+#             info (scrapy.ItemInformation): Contextual information about the scraping process.
 
-        Yields:
-            scrapy.Request: A Scrapy request object for downloading a photo.
-        """
-        adapter = ItemAdapter(item)
-        url = adapter.get(self.files_urls_field)
-        if url not in ["No cycle 8/9","Invalid BIN","No Photo"]:
-            bin_id = adapter['BIN']
-            cycle = adapter['cycle']
-            photo_count = adapter['photo_count']
-            file_key = f"{bin_id}:{cycle}:{photo_count}:{url}"
-            hash_key = f"{self.redis_key_prefix}"
+#         Yields:
+#             scrapy.Request: A Scrapy request object for downloading a photo.
+#         """
+#         adapter = ItemAdapter(item)
+#         url = adapter.get(self.files_urls_field)
+#         if url not in ["No cycle 8/9","Invalid BIN","No Photo"]:
+#             bin_id = adapter['BIN']
+#             cycle = adapter['cycle']
+#             photo_count = adapter['photo_count']
+#             file_key = f"{bin_id}:{cycle}:{photo_count}:{url}"
+#             hash_key = f"{self.redis_key_prefix}"
             
-            if self.redis_conn.get(f"{bin_id}:{file_key}")!=b"downloaded":
-                self.redis_conn.hset(hash_key, f"{file_key}", 'not_downloaded')
-                try:
-                    yield scrapy.Request(url, meta={'item': item, 'file_key': file_key})
-                except ValueError as e:
-                    with open("failedBIN.txt", "a") as f:
-                        f.write(f"{bin_id}\n")
+#             if self.redis_conn.get(f"{bin_id}:{file_key}")!=b"downloaded":
+#                 self.redis_conn.hset(hash_key, f"{file_key}", 'not_downloaded')
+#                 try:
+#                     yield scrapy.Request(url, meta={'item': item, 'file_key': file_key})
+#                 except ValueError as e:
+#                     with open("failedBIN.txt", "a") as f:
+#                         f.write(f"{bin_id}\n")
                 
                 
-    def file_path(self, request, response=None, info=None, *, item=None):
-        """
-        Generates filenames for downloaded photos based on BIN, cycle, and photo count.
+#     def file_path(self, request, response=None, info=None, *, item=None):
+#         """
+#         Generates filenames for downloaded photos based on BIN, cycle, and photo count.
 
-        Args:
-            request (scrapy.Request): The download request object.
-            info (scrapy.ItemInformation): Contextual information about the scraping process.
-            item (scrapy.Item): The scraped item containing data (optional).
+#         Args:
+#             request (scrapy.Request): The download request object.
+#             info (scrapy.ItemInformation): Contextual information about the scraping process.
+#             item (scrapy.Item): The scraped item containing data (optional).
 
-        Returns:
-            str: The generated filename for the downloaded photo.
-        """
-        item = request.meta['item']
-        adapter = ItemAdapter(item)
-        file_extension = os.path.splitext(urlparse(request.url).path)[1]
-        if adapter.get('photo_count') == 0:
-            filename = f"{adapter['cycle'][-5]}/{adapter['BIN']}_{adapter['cycle']}_DetailedPhoto{file_extension}"
-        else:
-            filename = f"{adapter['cycle'][-5]}/{adapter['BIN']}_{adapter['cycle']}_DetailedPhoto({adapter.get('photo_count')}){file_extension}"
-        print(filename)
+#         Returns:
+#             str: The generated filename for the downloaded photo.
+#         """
+#         item = request.meta['item']
+#         adapter = ItemAdapter(item)
+#         file_extension = os.path.splitext(urlparse(request.url).path)[1]
+#         if adapter.get('photo_count') == 0:
+#             filename = f"{adapter['cycle'][-5]}/{adapter['BIN']}_{adapter['cycle']}_DetailedPhoto{file_extension}"
+#         else:
+#             filename = f"{adapter['cycle'][-5]}/{adapter['BIN']}_{adapter['cycle']}_DetailedPhoto({adapter.get('photo_count')}){file_extension}"
+#         print(filename)
         
-        return filename
+#         return filename
     
-    def file_downloaded(self, response, request, info, *, item=None):
-        """
-        This method is called after a file download is completed. It updates the Redis
-        database to mark the file as downloaded if the download was successful.
+#     def file_downloaded(self, response, request, info, *, item=None):
+#         """
+#         This method is called after a file download is completed. It updates the Redis
+#         database to mark the file as downloaded if the download was successful.
 
-        Args:
-            response (scrapy.http.Response): The response received from the download request.
-            request (scrapy.http.Request): The original request that initiated the download.
-            info (scrapy.pipelines.media.MediaPipeline.SpiderInfo): Pipeline execution context for the spider.
-            item (scrapy.Item, optional): The item being processed.
+#         Args:
+#             response (scrapy.http.Response): The response received from the download request.
+#             request (scrapy.http.Request): The original request that initiated the download.
+#             info (scrapy.pipelines.media.MediaPipeline.SpiderInfo): Pipeline execution context for the spider.
+#             item (scrapy.Item, optional): The item being processed.
 
-        Returns:
-            str: The file checksum returned by the parent class method.
-        """
-        checksum = super().file_downloaded(response, request, info, item=item)
-        if response.status == 200:
-            hash_key = f"{self.redis_key_prefix}"
-            file_key = request.meta['file_key']
-            self.redis_conn.hset(hash_key, f"{file_key}", 'downloaded')
-        return checksum
+#         Returns:
+#             str: The file checksum returned by the parent class method.
+#         """
+#         checksum = super().file_downloaded(response, request, info, item=item)
+#         if response.status == 200:
+#             hash_key = f"{self.redis_key_prefix}"
+#             file_key = request.meta['file_key']
+#             self.redis_conn.hset(hash_key, f"{file_key}", 'downloaded')
+#         return checksum

@@ -18,6 +18,22 @@ class CrawlfispSpider(RedisSpider):
     
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
+        """
+        Initialize the spider with the crawler and connect signals for spider lifecycle events.
+
+        Args:
+            cls (class): The class of the spider.
+            crawler (Crawler): The crawler instance that is managing the spider.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            CrawlfispSpider: An instance of the CrawlfispSpider class.
+
+        Signals:
+            spider_opened: Connect the spider_opened method to the signals.spider_opened signal.
+            spider_closed: Connect the spider_closed method to the signals.spider_closed signal.
+        """
         spider = super(CrawlfispSpider, cls).from_crawler(crawler, *args, **kwargs)
         crawler.signals.connect(spider.spider_opened, signal=signals.spider_opened)
         crawler.signals.connect(spider.spider_closed, signal=signals.spider_closed)

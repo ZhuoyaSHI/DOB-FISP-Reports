@@ -1,0 +1,11 @@
+scrapy
+scrapy-redis
+twisted
+itemadapter
+fake-useragent
+redis
+beautifulsoup4
+lxml
+pycryptodome
+moment
+pandas

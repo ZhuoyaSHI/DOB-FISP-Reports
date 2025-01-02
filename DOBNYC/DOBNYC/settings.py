@@ -19,7 +19,7 @@ DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
 SCHEDULER_PERSIST = True
 SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.PriorityQueue'
-REDIS_URL = '{YOUR_REDIS_URL}'
+REDIS_URL = 'redis://localhost:6379'
 SCHEDULER_PRIORITY_QUEUE = 'scrapy.pqueues.DownloaderAwarePriorityQueue'
 
 FILES_STORE = 'Data/Detailed Photos'
@@ -81,7 +81,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    "DOBNYC.pipelines.DobnycPipeline": 300,
-   "DOBNYC.pipelines.PhotosPipeline": 200,
+   # "DOBNYC.pipelines.PhotosPipeline": 200,
    'DOBNYC.pipelines.CustomRedisPipeline': 100,
    'DOBNYC.pipelines.FinalizeStatusPipeline':900,
 }
