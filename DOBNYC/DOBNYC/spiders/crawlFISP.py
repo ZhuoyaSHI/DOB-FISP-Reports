@@ -196,23 +196,23 @@ class CrawlfispSpider(RedisSpider):
             cycle=cycle
         )
 
-        if all([FacadesDocumentList, Borough, ControlNumber, Tr6ReportNumber]):
-            Payload_Path = rf"\\PortalDownloadedDocuments\\{Borough}\\{ControlNumber}\\{Tr6ReportNumber}\\Supporting Documents\\"
-            for entry in FacadesDocumentList:
-                if entry["DocumentTypeName"] == "Detailed Photographs":
-                    payload = {
-                        "uploadedPath": entry["DocumentUrl"],
-                        "downloadPath": Payload_Path
-                    }
-                    yield scrapy.Request(
-                        url="https://a810-dobnow.nyc.gov/Publish/WrapperServicePP/WrapperService.svc/downloadFromDocumentum",
-                        method='POST',
-                        headers={'Content-Type': 'application/json'},
-                        body=json.dumps(payload),
-                        callback=self.parse_photos,
-                        meta={"items": items, "photo_count": 0, "BIN": BIN}
-                    )
-                    return
+        # if all([FacadesDocumentList, Borough, ControlNumber, Tr6ReportNumber]):
+        #     Payload_Path = rf"\\PortalDownloadedDocuments\\{Borough}\\{ControlNumber}\\{Tr6ReportNumber}\\Supporting Documents\\"
+        #     for entry in FacadesDocumentList:
+        #         if entry["DocumentTypeName"] == "Detailed Photographs":
+        #             payload = {
+        #                 "uploadedPath": entry["DocumentUrl"],
+        #                 "downloadPath": Payload_Path
+        #             }
+        #             yield scrapy.Request(
+        #                 url="https://a810-dobnow.nyc.gov/Publish/WrapperServicePP/WrapperService.svc/downloadFromDocumentum",
+        #                 method='POST',
+        #                 headers={'Content-Type': 'application/json'},
+        #                 body=json.dumps(payload),
+        #                 callback=self.parse_photos,
+        #                 meta={"items": items, "photo_count": 0, "BIN": BIN}
+        #             )
+        #             return
         
         items['fileurl'] = "No Photo"
         items['photo_count'] = "No Photo"
